@@ -31,6 +31,12 @@ jobs:
           cp store.ts types.ts src/lib/
           cp index.css main.tsx vite-env.d.ts src/
           printf '{}\n' > .figma/make/site.json
+          cat > vite.config.ts <<'EOF'
+          import { defineConfig } from 'vite';
+          import react from '@vitejs/plugin-react';
+          import tailwindcss from '@tailwindcss/vite';
+          export default defineConfig({ base: '/GREMIO-VOTA/', plugins: [react(), tailwindcss()] });
+          EOF
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Build Vite
@@ -51,3 +57,4 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
