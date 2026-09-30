@@ -3,10 +3,18 @@ name: Deploy site to GitHub Pages
 
 
 
+
+
+
+
 on:
   push:
     branches: [main]
   workflow_dispatch:
+
+
+
+
 
 
 
@@ -19,9 +27,17 @@ permissions:
 
 
 
+
+
+
+
 concurrency:
   group: pages
   cancel-in-progress: true
+
+
+
+
 
 
 
@@ -52,7 +68,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Build Vite
-        run: pnpm build
+        run: pnpm build --base=/GREMIO-VOTA/
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
@@ -66,9 +82,3 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-
-
-
