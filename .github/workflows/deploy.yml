@@ -1,181 +1,58 @@
 name: Deploy site to GitHub Pages
 
-
-
 on:
-
   push:
-  
     branches: [main]
-    
   workflow_dispatch:
-  
-
 
 permissions:
-
   contents: read
-  
   pages: write
-  
   id-token: write
-  
-
 
 concurrency:
-
   group: pages
-  
   cancel-in-progress: true
-  
-
 
 jobs:
-
   build:
-  
     runs-on: ubuntu-latest
-    
+    env:
+      FIGMA_PUBLIC_URL: /GREMIO-VOTA
     steps:
-    
       - name: Checkout
-      
         uses: actions/checkout@v4
-        
-
-
-      - name: Setup Node
-      
-        uses: actions/setup-node@v4
-        
-        with:
-        
-          node-version: 22
-          
-          cache: pnpm
-          
-
-
       - name: Setup pnpm
-      
         uses: pnpm/action-setup@v4
-        
         with:
-        
           version: 10
-          
-
-
-      - name: Recreate source folders
-      
-        run: |
-        
-          mkdir -p src/pages src/lib src/components
-          
-          cp Admin.tsx Home.tsx Resultados.tsx Votar.tsx src/pages/
-          
-          cp store.ts types.ts src/lib/
-          
-          cp index.css src/
-          
-          cp main.tsx vite-env.d.ts src/
-          
-
-
-      - name: Install dependencies
-      
-        run: pnpm install --frozen-lockfile
-        
-
-
-      - name: Build
-      
-        run: pnpm build
-        
-
-
-      - name: Configure Pages
-      
-        uses: actions/configure-pages@v5
-        
-
-
-      - name: Upload artifact
-      
-        uses: actions/upload-pages-artifact@v3
-        
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-        
+          node-version: 22
+      - name: Recreate source folders
+        run: |
+          mkdir -p src/pages src/lib src/components .figma/make
+          cp Admin.tsx Home.tsx Resultados.tsx Votar.tsx src/pages/
+          cp store.ts types.ts src/lib/
+          cp index.css main.tsx vite-env.d.ts src/
+          printf '{}\n' > .figma/make/site.json
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Build Vite
+        run: pnpm build
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        with:
           path: ./dist
-          
-
-
   deploy:
-  
-    environment:
-    
-      name: github-pages
-      
-      url: ${{ steps.deployment.outputs.page_url }}
-      
     runs-on: ubuntu-latest
-    
     needs: build
-    
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-    
       - name: Deploy to GitHub Pages
-      
         id: deployment
-        
         uses: actions/deploy-pages@v4
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
