@@ -1,8 +1,10 @@
 import type { Chapa, Voto } from './types';
 
+
 const CHAPAS_KEY = 'gremio_chapas';
 const VOTOS_KEY = 'gremio_votos';
 const ELEICAO_KEY = 'gremio_eleicao';
+
 
 export interface ConfigEleicao {
   nome: string;
@@ -12,6 +14,7 @@ export interface ConfigEleicao {
   inicio: string;
   fim: string;
 }
+
 
 const chapasDefault: Chapa[] = [
   {
@@ -40,14 +43,16 @@ const chapasDefault: Chapa[] = [
   },
 ];
 
+
 const eleicaoDefault: ConfigEleicao = {
   nome: 'Eleição do Grêmio Estudantil 2026',
   anoLetivo: '2026',
-  escola: 'E.E. Prof. João da Silva',
+  escola: 'CECM Onze de Outubro',
   aberta: true,
   inicio: '2026-09-15',
   fim: '2026-09-20',
 };
+
 
 export function getChapas(): Chapa[] {
   try {
@@ -58,53 +63,14 @@ export function getChapas(): Chapa[] {
   }
 }
 
+
 export function saveChapas(chapas: Chapa[]) {
   localStorage.setItem(CHAPAS_KEY, JSON.stringify(chapas));
 }
+
 
 export function getVotos(): Voto[] {
   try {
     const raw = localStorage.getItem(VOTOS_KEY);
     return raw ? JSON.parse(raw) : [];
   } catch {
-    return [];
-  }
-}
-
-export function addVoto(voto: Voto): boolean {
-  const votos = getVotos();
-  if (votos.find(v => v.matricula === voto.matricula)) return false;
-  votos.push(voto);
-  localStorage.setItem(VOTOS_KEY, JSON.stringify(votos));
-  return true;
-}
-
-export function resetVotos() {
-  localStorage.removeItem(VOTOS_KEY);
-}
-
-export function matriculaJaVotou(matricula: string): boolean {
-  return getVotos().some(v => v.matricula === matricula);
-}
-
-export function getResultados() {
-  const votos = getVotos();
-  const chapas = getChapas();
-  return chapas.map(c => ({
-    ...c,
-    votos: votos.filter(v => v.chapaId === c.id).length,
-  }));
-}
-
-export function getEleicao(): ConfigEleicao {
-  try {
-    const raw = localStorage.getItem(ELEICAO_KEY);
-    return raw ? JSON.parse(raw) : eleicaoDefault;
-  } catch {
-    return eleicaoDefault;
-  }
-}
-
-export function saveEleicao(cfg: ConfigEleicao) {
-  localStorage.setItem(ELEICAO_KEY, JSON.stringify(cfg));
-}
