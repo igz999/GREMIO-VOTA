@@ -6,7 +6,7 @@ import {
 import type { Chapa } from '../lib/types';
 import type { ConfigEleicao } from '../lib/store';
 
-const SENHA_ADMIN = 'gremio2026';
+const SENHA_ADMIN = 'gremio2022';
 
 export default function Admin() {
   const [logado, setLogado] = useState(false);
